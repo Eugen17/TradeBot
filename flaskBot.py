@@ -71,6 +71,6 @@ if __name__ == '__main__':
     try:
         # app.run(port=8080)
         bot.remove_webhook()
-        bot.polling(non_stop=True)
+        bot.polling(none_stop=True)
     except ConnectionError:
         pass
