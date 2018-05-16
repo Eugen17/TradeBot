@@ -5,7 +5,8 @@ import telebot
 from bs4 import BeautifulSoup
 import re
 
-send_content = "Currency -*{0}* \n" + \
+
+SEND_CONTENT = "Currency -*{0}* \n" + \
                "Price - *{1}*\n" + \
                "Time - *{2}*\n"
 
@@ -22,8 +23,7 @@ def get_html_soup(html):
 
 
 def get_currency(name):
-    print('rabotaem')
-    soup = get_html_soup('https://www.investing.com/currencies/'+name)
+    soup = get_html_soup('https://www.investing.com/currencies/' + name)
     curse = (soup.find("span", {"id": "last_last"})).text
     if name == 'gbp-usd':
         timenow = (soup.find("span", {"class": "bold pid-2-time"})).text
@@ -31,11 +31,10 @@ def get_currency(name):
         timenow = (soup.find("span", {"class": "bold pid-1910-time"})).text
     if name == 'eur-usd':
         timenow = (soup.find("span", {"class": "bold pid-1-time"})).text
-    return send_content.format(name.upper(), curse, timenow)
+    return SEND_CONTENT.format(name.upper(), curse, timenow)
 
 
 def get_commodities(name):
-    print('rabotaem')
     soup = get_html_soup('https://www.investing.com/commodities/'+name)
     curse = (soup.find("span", {"id": "last_last"})).text
     if name == 'brent-oil':
@@ -46,5 +45,5 @@ def get_commodities(name):
         timenow = (soup.find("span", {"class": "bold pid-8836-time"})).text
     if name == 'platinum':
         timenow = (soup.find("span", {"class": "bold pid-8910-time"})).text
-    return send_content.format(name.upper(), curse, timenow)
+    return SEND_CONTENT.format(name.upper(), curse, timenow)
 

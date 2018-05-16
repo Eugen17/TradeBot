@@ -1,14 +1,10 @@
-from flask import Flask, request, app
-import flask
-from flask_sslify import SSLify
 import telebot
 from telebot import types
-import re
-from Currency_defs import *
+from Currency_defs import get_currency,get_commodities
 import time
 
 # URL = 'https://api.telegram.org/bot535143387:AAFXwFzA7w8u7yG7HZUQslYPUBl5H_a7DE4/setWebhook?url=https://bdda6a79' \
-      '.ngrok.io/ '
+#      '.ngrok.io/ '
 EURO = 'eur/usd 💶'
 POUND = 'gbp/usd  💷 '
 YEN = 'jpy/usd 💴'
@@ -23,10 +19,7 @@ bot = telebot.TeleBot('535143387:AAFXwFzA7w8u7yG7HZUQslYPUBl5H_a7DE4')
 
 @bot.message_handler(commands=['start'])
 def start_message(message):  # Название функции не играет никакой роли, в принципе
-    markup = types.ReplyKeyboardMarkup()
-    markup.row(EURO,POUND,YEN)
-    markup.row('gold', 'silver', 'platinum', 'oil Brent ⛽')
-    bot.send_message(message.chat.id, "Choose currency:", reply_markup=markup)
+    show_keyboard()
 
 
 @bot.message_handler(content_types=["text"])
@@ -47,11 +40,14 @@ def repeat_all_messages(message):  # Название функции не игр
     elif message.text == 'oil Brent ⛽':
         bot.send_message(message.chat.id, get_commodities('brent-oil'), parse_mode='markdown')
     else:
-    	markup = types.ReplyKeyboardMarkup()
-    	markup.row(EURO,POUND,YEN)
-    	markup.row('gold', 'silver', 'platinum', 'oil Brent ⛽')
-    	bot.send_message(message.chat.id, "Choose currency from keyboard:", reply_markup=markup)	
+    	show_keyboard();
 
+
+def show_keyboard():
+	markup = types.ReplyKeyboardMarkup()
+	markup.row(EURO,POUND,YEN)
+	markup.row('gold', 'silver', 'platinum', 'oil Brent ⛽')
+	bot.send_message(message.chat.id, "Choose currency from keyboard:", reply_markup=markup)
 
 
 # # @app.route('/', methods=["POST"])
@@ -75,6 +71,6 @@ if __name__ == '__main__':
     try:
         # app.run(port=8080)
         bot.remove_webhook()
-        bot.polling()
+        bot.polling(non_stop=True)
     except ConnectionError:
         pass
